@@ -36,7 +36,7 @@ public class AccountService {
 
         Account newAccount = accountRepository.save(account);
         return newAccount;
-        // Github 테스트를 위한 주석 추가 랄랄
+        // Github 테스트를 위한 주석 추가 22
     }
 
     private void sendSignUpConfirmEmail(Account newAccount) {
