@@ -42,7 +42,8 @@ public class AccountController {
             // 하지만 프론트에서만 validation 을 추가한다면 보안의 위협이 존재하기 때문에, back 단 에서도 장치를 마련해는 것을 추천.
         }
 
-        accountService.processNewAccount(signUpForm);
+        Account account = accountService.processNewAccount(signUpForm);
+        accountService.login(account);
 
         // TODO 회원 가입 처리
         return "redirect:/";
@@ -58,12 +59,13 @@ public class AccountController {
             return view;
         }
 
-        if(!account.getEmailCheckToken().equals(token)) {
+        if (!account.isValidToken(token)) {
             model.addAttribute("error", "wrong.token");
             return view;
         }
 
         account.completeSignUp();
+        accountService.login(account);
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
         return view;
