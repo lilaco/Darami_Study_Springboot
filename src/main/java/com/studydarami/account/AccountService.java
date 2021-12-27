@@ -6,6 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,7 @@ public class AccountService {
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public void processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
 
@@ -36,7 +38,6 @@ public class AccountService {
 
         Account newAccount = accountRepository.save(account);
         return newAccount;
-        // Github 테스트를 위한 주석 추가 22
     }
 
     private void sendSignUpConfirmEmail(Account newAccount) {
@@ -44,7 +45,7 @@ public class AccountService {
         mailMessage.setTo(newAccount.getEmail());
         mailMessage.setSubject("스터디다람이의 회원 가입 인증");
         mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken()
-                + "$email=" + newAccount.getEmail());
+                + "&email=" + newAccount.getEmail());
         javaMailSender.send(mailMessage);
     }
 
